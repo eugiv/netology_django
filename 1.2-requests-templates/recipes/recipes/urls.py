@@ -15,6 +15,9 @@ Including another URLconf
 """
 
 from django.urls import path
-from calculator.views import cook_dish
+from calculator.views import cook_dish, home_view
 
-urlpatterns = [path("<str:dish>/", cook_dish, name="cook_dish")]
+urlpatterns = [
+    path("", home_view, name="home"),
+    path("<str:dish>/", cook_dish, name="cook_dish"),
+]

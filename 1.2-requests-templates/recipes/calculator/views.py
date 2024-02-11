@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 
 DATA = {
     "omlet": {
@@ -10,7 +10,7 @@ DATA = {
         "макароны, г": 0.3,
         "сыр, г": 0.05,
     },
-    "butter": {
+    "buter": {
         "хлеб, ломтик": 1,
         "колбаса, ломтик": 1,
         "сыр, ломтик": 1,
@@ -24,11 +24,25 @@ DATA = {
 }
 
 
+def home_view(request):
+    pages = {
+        "Омлет": reverse("cook_dish", kwargs={"dish": "omlet"}),
+        "Паста": reverse("cook_dish", kwargs={"dish": "pasta"}),
+        "Бутерброд": reverse("cook_dish", kwargs={"dish": "buter"}),
+        "Сладкий хлеб": reverse("cook_dish", kwargs={"dish": "sweet_bread"}),
+    }
+    context = {"pages": pages}
+
+    return render(request, "calculator/home.html", context)
+
+
 def cook_dish(request, dish):
     servings = int(request.GET.get("servings", 1))
     recipe = DATA.get(dish)
+
     for ingr_name, ingr_amnt in recipe.items():
         recipe[ingr_name] = ingr_amnt * servings
+
     context = {"recipe": recipe, "pers": servings}
     return render(request, "calculator/index.html", context)
 
