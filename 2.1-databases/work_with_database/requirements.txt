@@ -1,2 +1,3 @@
 django
 psycopg2-binary
+sshtunnel == 0.4.0
