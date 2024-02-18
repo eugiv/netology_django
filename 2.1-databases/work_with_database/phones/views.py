@@ -14,7 +14,7 @@ def show_catalog(request):
 
     phone_objects = Phone.objects.all()
 
-    sort = request.GET.get('sort', None)
+    sort = request.GET.get('sort')
     if sort:
         phone_objects = Phone.objects.order_by(user_actions[sort])
 
