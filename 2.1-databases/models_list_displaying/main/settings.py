@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import json
+
+from aws_postgres_conn import DBConnector
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,12 +54,30 @@ MIDDLEWARE = [
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+sens_file = os.path.join(os.getcwd(), 'sensitive.txt')
+with open(sens_file) as f:
+    f = json.load(f)
+    db_password = f['password']
+
+aws_connector = DBConnector(
+    sens_file=sens_file,
+    host='localhost',
+    database_port=5432,
+    ssh_user='ubuntu',
+    ssh_port=22,
+    database_user='postgres',
+    database='netology_library'
+
+)
+tunnel = aws_connector.connection()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'netology_models_list',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': 'netology_library',
+        'HOST': 'localhost',
+        'PORT': tunnel.local_bind_port,
+        'USER': 'postgres',
+        'PASSWORD': db_password,
     }
 }
 
