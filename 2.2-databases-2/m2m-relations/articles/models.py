@@ -14,3 +14,18 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Tag(models.Model):
+
+    name = models.CharField(max_length=20, verbose_name='Тэг')
+
+    class Meta:
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'
+
+
+class Scope(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scopes')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='scopes')
+    is_main = models.BooleanField(choices=[(True, 'Yes'), (False, 'No')])
