@@ -6,13 +6,15 @@ from .models import Student
 
 def students_list(request):
 
-    students = Student.objects.all()
+    students = Student.objects.prefetch_related('teachers')
+    students = students.order_by('group')
 
     template = 'school/students_list.html'
     context = {'object_list': students}
 
-    # используйте этот параметр для упорядочивания результатов
-    # https://docs.djangoproject.com/en/2.2/ref/models/querysets/#django.db.models.query.QuerySet.order_by
-    ordering = 'group'
-
     return render(request, template, context)
+
+# class StudentsListView(ListView):
+#     model = Student
+#     template_name = 'school/students_list.html'
+#     context_object_name = 'object_list'
