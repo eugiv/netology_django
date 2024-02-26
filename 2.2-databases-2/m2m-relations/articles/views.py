@@ -5,7 +5,7 @@ from articles.models import Article
 
 def articles_list(request):
 
-    articles = Article.objects.all()
+    articles = Article.objects.prefetch_related("tags")
     articles = articles.order_by('-published_at')
 
     template = 'articles/news.html'

@@ -9,7 +9,7 @@ class Article(models.Model):
     image = models.ImageField(null=True, blank=True, verbose_name='Изображение',)
 
     class Meta:
-        verbose_name = 'Статья'
+        verbose_name = 'Статью'
         verbose_name_plural = 'Статьи'
 
     def __str__(self):
@@ -19,13 +19,17 @@ class Article(models.Model):
 class Tag(models.Model):
 
     name = models.CharField(max_length=20, verbose_name='Тэг')
+    articles = models.ManyToManyField(Article, through='Scope', related_name='tags')
 
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
 
+    def __str__(self):
+        return self.name
+
 
 class Scope(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='scopes')
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='scopes')
-    is_main = models.BooleanField(choices=[(True, 'Yes'), (False, 'No')])
+    is_main = models.BooleanField()
