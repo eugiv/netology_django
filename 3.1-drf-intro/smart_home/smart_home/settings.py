@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import json
+
 from pathlib import Path
+
+from aws_postgres_conn import DBConnector
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,17 +79,36 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smart_home.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+sens_file = os.path.join(os.getcwd(), 'sensitive.txt')
+with open(sens_file) as f:
+    f = json.load(f)
+    db_password = f['password']
 
+aws_connector = DBConnector(
+    sens_file=sens_file,
+    host='localhost',
+    database_port=5432,
+    ssh_user='ubuntu',
+    ssh_port=22,
+    database_user='postgres',
+    database='netology_smart_home'
+
+)
+tunnel = aws_connector.connection()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'netology_smart_home',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'HOST': 'localhost',
+        'PORT': tunnel.local_bind_port,
+        'USER': 'postgres',
+        'PASSWORD': db_password,
     }
 }
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
 
 
 # Password validation
