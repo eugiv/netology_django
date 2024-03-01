@@ -7,6 +7,7 @@ from measurement.models import Sensor, Measurement
 class SensorAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Measurement)
 class MeasurementAdmin(admin.ModelAdmin):
     pass
