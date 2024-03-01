@@ -1,3 +1,4 @@
+from django.templatetags.static import static
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 
 from measurement.models import Sensor, Measurement
