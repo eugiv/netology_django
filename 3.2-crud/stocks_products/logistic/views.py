@@ -11,9 +11,9 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    search_fields = ['title', 'description']
-    filterset_fields = ['id']
-    ordering_fields = ['description', 'id']
+    search_fields = ["title", "description"]
+    filterset_fields = ["id"]
+    ordering_fields = ["description", "id"]
     pagination_class = LimitOffsetPagination
 
 
@@ -21,5 +21,5 @@ class StockViewSet(ModelViewSet):
     queryset = Stock.objects.all()
     serializer_class = StockSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    search_fields = ['products__title']
-    filterset_fields = ['products']
+    search_fields = ["products__title", "products__description"]
+    filterset_fields = ["products"]
