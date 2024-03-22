@@ -9,7 +9,10 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
+import json
 
+from aws_postgres_conn import DBConnector
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,12 +88,29 @@ WSGI_APPLICATION = 'api_with_restrictions.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+sens_file = os.path.join(os.getcwd(), "sensitive.txt")
+with open(sens_file) as f:
+    f = json.load(f)
+    db_password = f["password"]
+
+aws_connector = DBConnector(
+    sens_file=sens_file,
+    host="localhost",
+    database_port=5432,
+    ssh_user="ubuntu",
+    ssh_port=22,
+    database_user="postgres",
+    database="netology_ads",
+)
+tunnel = aws_connector.connection()
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'netology_classified_ads',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "netology_ads",
+        "HOST": "localhost",
+        "PORT": tunnel.local_bind_port,
+        "USER": "postgres",
+        "PASSWORD": db_password,
     }
 }
 

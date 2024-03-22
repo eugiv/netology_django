@@ -1,0 +1,2 @@
+{"aws_dns": "ec2-3-92-189-51.compute-1.amazonaws.com",
+"password": "0119172Postgres"}
