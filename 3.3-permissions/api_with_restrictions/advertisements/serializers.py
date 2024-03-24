@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from advertisements.models import Advertisement, AdvertisementStatusChoices
+from advertisements.models import Advertisement
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer для пользователя."""

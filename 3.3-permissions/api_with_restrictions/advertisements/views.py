@@ -7,6 +7,9 @@ from advertisements.models import Advertisement
 from advertisements.permissions import IsOwnerOrReadOnly
 from advertisements.serializers import AdvertisementSerializer
 
+from django_filters import DateFromToRangeFilter
+from django_filters.rest_framework import FilterSet
+
 
 class AdvertisementViewSet(ModelViewSet):
     """ViewSet для объявлений."""
@@ -17,7 +20,7 @@ class AdvertisementViewSet(ModelViewSet):
     serializer_class = AdvertisementSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = [""]
+    # filterset_fields = [""]
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
@@ -27,3 +30,11 @@ class AdvertisementViewSet(ModelViewSet):
         if self.action in ["create", "update", "partial_update"]:
             return [IsAuthenticated()]
         return []
+
+
+class F(FilterSet):
+    created_at = DateFromToRangeFilter()
+
+    class Meta:
+        model = Advertisement
+        fields = ["created_at"]
